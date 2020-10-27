@@ -1,0 +1,628 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: serverless Base
+  description: this whole program invoke apigateway, lambda function, s3, Dynamodb through a Java Lambda Function 
+  version: "3.0.0"
+# the domain of the service
+host: execute-api.us-west-2.amazonaws.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /
+produces:
+  - application/json
+paths:
+  /restuarants:
+    get:
+      summary: List restuarants
+      description: Retrieve a list of restuarants in the store
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:528233739287:function:LambdaServerlessBase/invocations
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.awsserverless.apigatelambda.requestaction.GetRestuarantList",
+              "body" : $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: A list of restuarants
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Restuarants'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+  /restuarants/{restuarantID}:
+    get:
+      summary: Get a specified restuarant by restuarantID
+      description: Return a restuarant
+      consumes:
+        - application/json
+      produces: 
+        - application/json
+      tags: 
+        - Restuarant
+      parameters:
+        - name: restuarantID
+          in: path
+          required: true
+          type: string
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:528233739287:function:LambdaServerlessBase/invocations
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.awsserverless.apigatelambda.requestaction.GetRestuarantList",
+              "body" : {
+                "restuarantID" : "$input.params('restuarantID')"
+              }
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: A restuarant
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Restuarant'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+  /restuarantPost:
+    post:
+      summary: update a new restuarant
+      description:  create and update a new restuarant
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name : restObj
+          in: body
+          schema:
+            $ref: '#/definitions/Restuarant'
+      tags:
+        - Restuatant
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:528233739287:function:LambdaServerlessBase/invocations
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.awsserverless.apigatelambda.requestaction.PostRestuarant",
+              "body" : $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: A restuarant ID 
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/NewRestuarantPostResponse'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+  /userAction:
+    post:
+      summary: register a new User
+      description: create a new user, complete the procesemps of register and update to database; update an exist user to database.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: userObj
+          in: body
+          schema:
+            $ref: '#/definitions/UserData'
+      tags:
+        - User
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:528233739287:function:LambdaServerlessBase/invocations
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action": "com.awsserverless.apigatelambda.requestaction.PostUser",
+              "body": $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: nothing 
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+  /userAction/{deviceID}:
+    get:
+      summary: get a user information from the deviceID
+      description: get a specified user infomation
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - User
+      parameters:
+        - name: deviceID
+          in: path
+          required: true
+          type: string
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:528233739287:function:LambdaServerlessBase/invocations
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.awsserverless.apigatelambda.requestaction.GetSpecifiedUserRequest",
+              "body": {
+                "deviceID" : "$input.params('deviceID')"
+              }
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+      responses:
+        200:
+          description: A restuarant
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/UserData'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        
+  /searchMenuByFandian/{fandianID}:
+    get:
+      summary: get a list of dishes in accordance with restaurant id
+      description: get a list of dishes in accordance with restaurant id  
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: fandianID
+          in: path
+          required: true
+          type: string
+      tags:
+        - Menu
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:528233739287:function:LambdaServerlessBase/invocations
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action" : "com.awsserverless.apigatelambda.requestaction.SearchMenudataByRestID",
+              "body" : {
+                "fandianID" :  "$input.params('fandianID')"
+              }
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"   
+      responses:
+        200:
+          description: return a list of restaurants in accordance with location
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/SearchDishDataResponse'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'                  
+  /searchFandianByMap:
+    post:
+      summary: search Restauarnts by map
+      description: use range to get all the restaurants 
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: locationObj
+          in: body
+          schema:
+            $ref: '#/definitions/SearchFandianByMapRequest'
+      tags:
+        - Fandian
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:528233739287:function:LambdaServerlessBase/invocations
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action": "com.awsserverless.apigatelambda.requestaction.SearchRestaurantByMapRequest",
+              "body": $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"        
+      responses:
+        200:
+          description: return a list of restaurants in accordance with location
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/SearchFandianResponse'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'            
+  /searchFandianByCity:
+    post:
+      summary: use city parameter to get all the restaurants
+      description: use city parameter to get all the restaurants
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: cityObj
+          in: body
+          schema:
+            $ref: '#/definitions/SearchFandianByCityRequest'
+      tags:
+        - Fandian
+      x-amazon-apigateway-integration:
+        type: aws
+        uri: arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:528233739287:function:LambdaServerlessBase/invocations
+        httpMethod: POST
+        requestTemplates:
+          application/json: |
+            {
+              "action": "com.awsserverless.apigatelambda.requestaction.SearchRestaurantByCityRequest",
+              "body": $input.json('$')
+            }
+        responses:
+          "default":
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "BAD.*":
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"
+          "INT.*":
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin : "'*'"            
+      responses:
+        200:
+          description: return a list of restaurants in accordance with location
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/SearchFandianResponse'
+        400:
+          description: Bad request
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Internal error
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Restuarant:
+    properties:
+      restuarantID:
+        type: string
+      restuarantName:
+        type: string
+      restuarantType:
+        type: string
+      longitude:
+        type: string
+      latitude:
+        type: string
+  Restuarants:
+    type: array
+    items:
+      $ref: '#/definitions/Restuarant'
+  NewRestuarantPostResponse:
+    properties:
+      restuarantID:
+        type: string
+        description: return the unique ID which is generated
+  SearchFandianByCityRequest:
+    properties:
+      restCity:
+        type: string
+      restState:
+        type: string
+      restNation:
+        type: string
+  SearchFandianByMapRequest:
+    properties:
+        minLongitude:
+          type: number
+          format: float
+        maxLongitude:
+          type: number
+          format: float
+        minLatitude:
+          type: number
+          format: float
+        maxLatitude:
+          type: number
+          format: float
+  Fandian:
+    properties:
+      restID:
+        type: string
+      restCity:
+        type: string
+      restState:
+        type: string
+      restNation:
+        type: string
+      typeTag:
+        type: string
+      restAddress:
+        type: string
+      restName:
+        type: string
+      restPhone:
+        type: string
+      restMenu:
+        type: string
+      longitude:
+        type: number
+        format: float
+      latitude:
+        type: number
+        format: float
+  SearchFandianResponse:
+    properties:
+      nCount:
+        type: integer
+      listResult:
+        type: array
+        items:
+         $ref: '#/definitions/Fandian'
+  UserData:
+    properties:
+      deviceID:
+        type: string
+      eMail:
+        type: string
+      historyID:
+        type: string
+      userName:
+        type: string
+      tags:
+        type: array
+        items: {
+          type: string
+        }
+  DishData:
+    properties:
+      dishIDAutoGenerated:
+        type: string
+      dishID:
+        type: string
+      dishUrl:
+        type: string
+      dishPrice:
+        type: string
+      description:
+        type: string
+      dishType:
+        type: string
+      restID:
+        type: string
+      dishTags:
+        type: array
+        items: {
+          type: string
+        }
+  SearchDishDataResponse:
+    properties:
+      nCount:
+        type: integer
+      listResult:
+        type: array
+        items:
+          $ref: '#/definitions/DishData'
+  Error:
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string			
