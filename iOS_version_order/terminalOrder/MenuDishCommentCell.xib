@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="menudishcommentcell" rowHeight="115" id="KGk-i7-Jjw" customClass="MenuDishCommentCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="115"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="115"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UYu-Gd-W6I">
+                        <rect key="frame" x="8" y="8" width="156" height="22"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Igq-AZ-z7Z">
+                        <rect key="frame" x="209" y="7" width="103" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="103" id="ZDx-jn-t8M"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VUN-go-mBL">
+                        <rect key="frame" x="8" y="37" width="304" height="70"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="VUN-go-mBL" firstAttribute="top" secondItem="UYu-Gd-W6I" secondAttribute="bottom" constant="7" id="CDG-ji-j5R"/>
+                    <constraint firstItem="Igq-AZ-z7Z" firstAttribute="trailing" secondItem="VUN-go-mBL" secondAttribute="trailing" id="Gfn-ai-ExR"/>
+                    <constraint firstItem="VUN-go-mBL" firstAttribute="top" secondItem="Igq-AZ-z7Z" secondAttribute="bottom" constant="8" symbolic="YES" id="Jaq-uU-dIW"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="VUN-go-mBL" secondAttribute="trailing" id="RY7-UN-RYu"/>
+                    <constraint firstAttribute="leadingMargin" secondItem="VUN-go-mBL" secondAttribute="leading" id="XwZ-5u-7QA"/>
+                    <constraint firstItem="Igq-AZ-z7Z" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-1" id="YIb-r1-s9p"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="VUN-go-mBL" secondAttribute="bottom" id="ca4-YJ-xsZ"/>
+                    <constraint firstItem="Igq-AZ-z7Z" firstAttribute="leading" secondItem="UYu-Gd-W6I" secondAttribute="trailing" constant="45" id="fuh-V0-1Ti"/>
+                    <constraint firstItem="Igq-AZ-z7Z" firstAttribute="baseline" secondItem="UYu-Gd-W6I" secondAttribute="firstBaseline" id="hhm-xv-VwO"/>
+                    <constraint firstAttribute="topMargin" secondItem="UYu-Gd-W6I" secondAttribute="top" id="kbc-pW-6VW"/>
+                    <constraint firstItem="VUN-go-mBL" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="kdv-oE-YhQ"/>
+                    <constraint firstItem="UYu-Gd-W6I" firstAttribute="leading" secondItem="VUN-go-mBL" secondAttribute="leading" id="tI7-Dg-Up0"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="lblComment" destination="VUN-go-mBL" id="ocL-fK-zBY"/>
+                <outlet property="lblTime" destination="UYu-Gd-W6I" id="HY0-Jw-2zl"/>
+                <outlet property="lblUserID" destination="Igq-AZ-z7Z" id="Crw-Lr-Foe"/>
+            </connections>
+            <point key="canvasLocation" x="25" y="87.5"/>
+        </tableViewCell>
+    </objects>
+</document>
